@@ -8,26 +8,32 @@ app = Flask(__name__)
 
 @app.route('/', methods=['POST'])
 def home():
-    try:
-        url = request.get_json(force=True)
-        if url['link']:
+        command = request.get_json(force=True)
+        if 'navegador' in command.keys():
             window = gw.getWindowsWithTitle('Google Chrome')
             if not window:
                 os.startfile('C:\Program Files\Google\Chrome\Application\chrome.exe')
                 sleep(2)
                 window = gw.getWindowsWithTitle('Google Chrome')
-            window[0].minimize()
-            window[0].maximize()
-            sleep(.5)
+            try:
+                window[0].activate()
+            except:
+                window[0].minimize()
+                window[0].maximize()
+                print('erro activate')
             with p.hold('ctrl'):
                 p.press('l')
-            p.typewrite(url['link'])
+            p.typewrite(command['navegador'])
             p.press('enter')
-            return 'accepted'
+            return 'Accepted'
+        elif 'multimidia' in command.keys():
+            p.press(command['tecla'])
+            return '200'
+        elif 'rotina' in command.keys():
+            pass
         else:
-            return 'failed'
-    except:
-        return 'failed'
+            return 'Failed'
+
     
 
 
