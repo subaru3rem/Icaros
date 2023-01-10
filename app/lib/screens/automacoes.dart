@@ -29,12 +29,12 @@ class _Automacoes extends State<Automacoes>{
         margin: const EdgeInsets.all(20),
         width: 300.0,
         height: 50.0,
-        decoration: BoxDecoration(border: Border.all(color: custom_colors.secundary_color)),
+        decoration: BoxDecoration(color: custom_colors.secundary_color),
         child: TextButton(
           onPressed: energia,
           child:const Text(
                 'Energia',
-                style: TextStyle(fontSize: 25, color: custom_colors.secundary_color),
+                style: TextStyle(fontSize: 25, color: Colors.white),
               )
           ),
         ),
