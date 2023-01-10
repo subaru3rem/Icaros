@@ -103,8 +103,8 @@ class _Navegador_widgets extends State<Navegador_widgets>{
           child:Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: const <Widget>[
-              Text('Favoritos'),
-              Icon(Icons.add),
+              Text('Favoritos', style: TextStyle(color:Colors.white, fontSize: 20),),
+              Icon(Icons.add, color:Colors.white),
             ]
           ),
         ),
