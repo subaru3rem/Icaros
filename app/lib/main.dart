@@ -77,11 +77,16 @@ Uri url = Uri.http('192.168.10.50:5000');
   void search_ip() async{
     
     Map<String, dynamic> obj = {'pc_info':''};
-    final response = await http.post(url, body:jsonEncode(obj));
+    try {final response = await http.post(url, body:jsonEncode(obj));
     setState(() {
+      
       var r = response.body;
       _resposta = jsonDecode(r);
-    });
+    });}catch(e){
+      setState(() {
+        _resposta['host'] = 'Falha no servidor';
+      });
+    }
   }
   @override
   Widget build(BuildContext context) {
@@ -101,17 +106,41 @@ Uri url = Uri.http('192.168.10.50:5000');
             Expanded(child:FractionallySizedBox(
               heightFactor: .9,
               widthFactor: .9,
-              child: Column(
+              child: Container(
+                margin: const EdgeInsets.all(15),
+                decoration: BoxDecoration(
+                  color: custom_colors.primary_color,
+                  boxShadow: const [BoxShadow(
+                    color: custom_colors.secundary_color,
+                    spreadRadius: 1,
+                    blurRadius: 20,
+                  )],
+                  borderRadius: BorderRadius.circular(10)
+                ),
+                child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                Text('Desktop name: '+_resposta['host']),
-                Text('Uso de memoria: '+_resposta['memory']),
-                Text('Uso de cpu: '+_resposta['cpu'])
-              ])
+                Text(
+                  _resposta['host'],
+                  style: const TextStyle(
+                    fontSize: 40
+                  ),
+                ),
+                Text(
+                  'Uso de cpu: '+_resposta['cpu'],
+                  style: TextStyle(fontSize: 20),
+                ),
+                Text(
+                  'Uso de memoria: '+_resposta['memory'],
+                  style: TextStyle(fontSize: 20),
+                ),
+                
+              ]),
+              )
             )),
             GridView.count(
                   shrinkWrap: true,
-                  padding: const EdgeInsets.all(30),
+                  padding: const EdgeInsets.all(20),
                   crossAxisSpacing: 20,
                   mainAxisSpacing: 20,
                   crossAxisCount: 2,
