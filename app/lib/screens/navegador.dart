@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:hello/values/custom_colors.dart';
+import 'package:Icaros/values/custom_colors.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -35,28 +35,35 @@ class Navegador_widgets extends StatefulWidget{
 class _Navegador_widgets extends State<Navegador_widgets>{
   var _link = '';
   var _resposta = '';
-  Map<String, String> _fav_temp = Map<String, String>();
   List<Widget> _fav = [Center()];
+  Map<String, String> _fav_temp = Map<String, String>();
   bool _request_state = true;
   Widget _fav_container = Center();
   Widget _stack =  Center();
   
- 
-  
-  
   @override
-  
   Widget build(BuildContext context) {  
-    _get_fav();
     return Column(
           children: <Widget> [
-            Center(
+            Container(
+              margin: const EdgeInsets.only(top:50,bottom:50,right:20,left:20),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20),
+                color: custom_colors.primary_color,
+                boxShadow: const [BoxShadow(
+                    color: custom_colors.secundary_color,
+                    spreadRadius: 1,
+                    blurRadius: 20,
+                  )],
+              ),
+              child:Center(
               heightFactor: 2,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                 Container(margin:const EdgeInsets.only(right: 15),child:const Icon(Icons.language, color: Colors.white, size: 60)),
                 const Text('Navegar', style: TextStyle(fontSize: 30),)])
+            )
             ),
             Container(
             margin: const EdgeInsets.only(top: 10, left: 30, right: 30, bottom: 20),
@@ -72,23 +79,18 @@ class _Navegador_widgets extends State<Navegador_widgets>{
               ),
               border: OutlineInputBorder(),
               labelText: 'Digite o link',
-              labelStyle: TextStyle(color: custom_colors.secundary_color)
+              labelStyle: TextStyle(color: Colors.white)
               ),
             )
             ),
             Container(
-              margin: const EdgeInsets.only(bottom: 20),
+              margin: const EdgeInsets.only(top:20,bottom: 20),
               child:FloatingActionButton(
               heroTag: 'btn_search',
-              onPressed: ()=>server(_link),
+              onPressed: ()=>serve(_link),
               child: const Icon(Icons.search),
             )),
-            Expanded(
-              child: ListView(
-              padding: const EdgeInsets.all(8),
-              children: _fav,
-            )
-            ),
+            const Expanded(child: Center()),
             Column(
       mainAxisAlignment: MainAxisAlignment.end,
       children: <Widget>[Container(
@@ -96,7 +98,7 @@ class _Navegador_widgets extends State<Navegador_widgets>{
         width: 300.0,
         height: 50.0,
         child: TextButton(
-          onPressed: _set_fav,
+          onPressed: fav,
           style: const ButtonStyle(
             backgroundColor: MaterialStatePropertyAll<Color>(custom_colors.secundary_color),
           ),
@@ -104,7 +106,7 @@ class _Navegador_widgets extends State<Navegador_widgets>{
             mainAxisAlignment: MainAxisAlignment.center,
             children: const <Widget>[
               Text('Favoritos', style: TextStyle(color:Colors.white, fontSize: 20),),
-              Icon(Icons.add, color:Colors.white),
+              Icon(Icons.star, color:Colors.white),
             ]
           ),
         ),
@@ -112,14 +114,64 @@ class _Navegador_widgets extends State<Navegador_widgets>{
     ),
     ]
     );}
-  
-  void server(link) async {
-      var url = Uri.http('192.168.10.50:5000');
-      Map<String, dynamic> obj = {'navegador': link};
-      final response = await http.post(url, body:jsonEncode(obj));
-      setState(() {_resposta = response.body;});
+  void fav(){
+    get_fav();
+    Scaffold.of(context).showBottomSheet(
+      (BuildContext context){
+        return Column(
+          children:[
+            const Expanded(child: Center()),
+            Container(
+              height: 400,
+              decoration: const BoxDecoration(color: custom_colors.primary_color, borderRadius: BorderRadius.only(topLeft: Radius.circular(20),topRight: Radius.circular(20))),
+              child:Expanded(child:Column(
+                children: [
+                  Container(
+                    height: 80,
+                    padding: const EdgeInsets.symmetric(vertical:15, horizontal: 25),
+                    width: double.infinity,
+                    decoration: const BoxDecoration(border: Border(bottom: BorderSide(width: 5, color: custom_colors.secundary_color))),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text(
+                      'Favoritos',
+                      style: TextStyle(fontSize: 25),
+                    ),
+                    SizedBox(
+                      height: 30,
+                      width: 100,
+                      child: TextButton(
+                        onPressed: set_fav, 
+                        style: ButtonStyle(backgroundColor: MaterialStatePropertyAll<Color>(custom_colors.secundary_color)),
+                        child: Text('Add', style:TextStyle(color:Colors.white))
+                      ) 
+                    )
+                      ],
+                    )
+                  ),
+                  Expanded(
+                    child: ListView(
+                      children: _fav,
+                    ),
+                  )
+                ],
+              )
+              )
+              )
+          ]
+        );
+      }
+      );
   }
-  void _set_fav(){
+  void get_fav() async{
+    if (_request_state){
+    final pref = await SharedPreferences.getInstance();
+    final List<String>? info = pref.getStringList('favoritos');
+    if (info != null){
+    state(info);
+  }}}
+  void set_fav(){
             {
      Scaffold.of(context).showBottomSheet<void>(
             (BuildContext context) {
@@ -146,7 +198,7 @@ class _Navegador_widgets extends State<Navegador_widgets>{
                       ),
                     )),
                     TextButton(
-                      onPressed: _cancel_fav,
+                      onPressed: fav,
                       child: const Icon(Icons.close, color: Colors.white,),
                     )
             ])
@@ -169,7 +221,7 @@ class _Navegador_widgets extends State<Navegador_widgets>{
               ),
               border: OutlineInputBorder(),
               labelText: 'Nome do Site',
-              labelStyle: TextStyle(color: custom_colors.secundary_color)
+              labelStyle: TextStyle(color: Colors.white)
               ),
                   )),
                   Container(
@@ -186,18 +238,18 @@ class _Navegador_widgets extends State<Navegador_widgets>{
                     ),
                     border: OutlineInputBorder(),
                     labelText: 'Url do site (link)',
-                    labelStyle: TextStyle(color: custom_colors.secundary_color)
+                    labelStyle: TextStyle(color: Colors.white)
                     ),
                     )
                   ),
                   Container(
                     margin: const EdgeInsets.all(20),
                     child: TextButton(
-                      onPressed: (){save_fav(jsonEncode(_fav_temp)); Navigator.pop(context);},
+                      onPressed: (){save_fav(jsonEncode(_fav_temp)); fav();},
                       style: const ButtonStyle(
                         backgroundColor: MaterialStatePropertyAll<Color>(custom_colors.secundary_color),
                       ),
-                      child: const Text('Salvar')
+                      child: const Text('Salvar', style: TextStyle(color:Colors.white),)
                       ),
                   )
                 ],
@@ -209,9 +261,6 @@ class _Navegador_widgets extends State<Navegador_widgets>{
       );;
               });}
           }
-  void _cancel_fav(){
-    Navigator.pop(context);                  
-  }
   void save_fav(save) async{
     final prefs = await SharedPreferences.getInstance();
     List<String>? info = prefs.getStringList("favoritos");
@@ -221,49 +270,32 @@ class _Navegador_widgets extends State<Navegador_widgets>{
     state(info);
   }
   void state(info){
-  _fav = <Widget>[];
+  _fav = [];
   setState(() {
     
   for(var site in info) {
       var s = jsonDecode(site);
        _fav.add(
         Container(
-        margin: const EdgeInsets.all(20),
-        width: 200.0,
         height: 50.0,
+        width: double.infinity,
+        decoration: const BoxDecoration(
+          border: Border.symmetric(horizontal: BorderSide(width: .5, color: custom_colors.secundary_color))
+        ),
         child: TextButton(
-          onPressed: ()=>server(s['link']),
-          onLongPress: ()=>_remove_fav_container(s),
-          style:  TextButton.styleFrom(
-            side: BorderSide(width: 2.0, color: custom_colors.secundary_color)
-          ),
-          child:Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Text(s['nome'], style: TextStyle(color: custom_colors.secundary_color, fontSize: 20),)
-            ]
+          onPressed: ()=>serve(s['link']),
+          onLongPress: ()=>remove_fav_container(s),
+          child:Center(
+            child:Text(s['nome'], style:const TextStyle(color:Colors.white, fontSize: 20),)
           ),
         ),
       )
       ); 
   };});
-}
-  void _get_fav() async{
-    if (_request_state){
-    final pref = await SharedPreferences.getInstance();
-    final List<String>? info = pref.getStringList('favoritos');
-    if (_fav.length <2 ){
-    state(info!);
-  }}}
-  void _remove_fav_container(s){
+} 
+  void remove_fav_container(s){
     String name = s['nome'];
-    var widget =
-        FractionallySizedBox(
-        widthFactor: 1.0,
-        heightFactor: 1.0,
-        child:Container(
-          color: const Color.fromARGB(122, 0, 0, 0),
-          child: Center(
+    var widget =Center(
             child:Container(
               width: 300,
               height: 150,
@@ -284,40 +316,56 @@ class _Navegador_widgets extends State<Navegador_widgets>{
                   Row(
                     mainAxisAlignment:MainAxisAlignment.center,
                     children: [Container(
-                      margin: EdgeInsets.all(10),
+                      margin: const EdgeInsets.all(10),
                       child:TextButton(
-                      onPressed: ()=>_dell_fav(s),
+                      onPressed: ()=>dell_fav(s),
                       style: const ButtonStyle(
                         backgroundColor: MaterialStatePropertyAll<Color>(custom_colors.secundary_color),
                       ),
-                      child: const Text('Sim'),
+                      child: const Text('Sim', style: TextStyle(color: Colors.white)),
                     )),
                     Container(
-                      margin: EdgeInsets.all(10),
+                      margin: const EdgeInsets.all(10),
                       child:TextButton(
-                      onPressed: _cancel_fav,
-                      style: ButtonStyle(
+                      onPressed: fav,
+                      style: const ButtonStyle(
                         backgroundColor: MaterialStatePropertyAll<Color>(custom_colors.secundary_color),
                       ),
-                      child: const Text('Não')))
+                      child: const Text('Não', style: TextStyle(color: Colors.white),)))
                   ],)
                 ],
               ), 
             )
-          )
-        )
-        );
+          );
       Scaffold.of(context).showBottomSheet<void>(
-            (BuildContext context) {
-              
+            (BuildContext context) { 
               return widget;});
   }
-  void _dell_fav(s) async {
+  void dell_fav(s) async {
     final prefs = await SharedPreferences.getInstance();
     List<String>? info = prefs.getStringList("favoritos");
     info?.remove(jsonEncode(s));
     await prefs.setStringList('favoritos', info!);
-    _cancel_fav();
-    state(info);
+    // ignore: use_build_context_synchronously
+    fav();
+  }
+  void serve(link) async {
+    Scaffold.of(context).showBottomSheet((BuildContext context){
+      return const Center(
+        child: SizedBox(
+          height: 100,
+          width: 100,
+          child: CircularProgressIndicator(
+            color: custom_colors.secundary_color,
+          )
+        ),
+      );
+    });
+      var url = Uri.http('192.168.10.50:5000');
+      Map<String, dynamic> obj = {'navegador': link};
+      // ignore: unused_local_variable
+      await http.post(url, body:jsonEncode(obj));
+    // ignore: use_build_context_synchronously
+    Navigator.pop(context);
   }
 }

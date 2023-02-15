@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:hello/values/custom_colors.dart';
+import 'package:Icaros/values/custom_colors.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
@@ -29,7 +29,7 @@ class _Automacoes extends State<Automacoes>{
         margin: const EdgeInsets.all(20),
         width: 300.0,
         height: 50.0,
-        decoration: BoxDecoration(color: custom_colors.secundary_color),
+        decoration: BoxDecoration(border: Border.all(color: custom_colors.secundary_color)),
         child: TextButton(
           onPressed: energia,
           child:const Text(
@@ -60,7 +60,7 @@ class _Automacoes extends State<Automacoes>{
         decoration: BoxDecoration(border: Border.all(color: custom_colors.secundary_color)),
         child: TextButton(
           onPressed: () => server({'shutdown':'/s'}),
-          child: const Icon(Icons.power_settings_new, color: custom_colors.secundary_color),
+          child: const Icon(Icons.power_settings_new, color: Colors.white),
         ),
       )),
       Expanded(
@@ -70,7 +70,7 @@ class _Automacoes extends State<Automacoes>{
         decoration: BoxDecoration(border: Border.all(color: custom_colors.secundary_color)),
         child: TextButton(
           onPressed: () => server({'shutdown':'/r'}),
-          child: const Icon(Icons.restart_alt,color: custom_colors.secundary_color),
+          child: const Icon(Icons.restart_alt,color: Colors.white),
         ),
       )
       ),
@@ -81,7 +81,7 @@ class _Automacoes extends State<Automacoes>{
         decoration: BoxDecoration(border: Border.all(color: custom_colors.secundary_color)),
         child: TextButton(
           onPressed: () => server({'shutdown':'/h'}),
-          child: const Icon(Icons.nights_stay, color: custom_colors.secundary_color,),
+          child: const Icon(Icons.nights_stay, color: Colors.white),
         ),
       )
       ),

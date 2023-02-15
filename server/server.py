@@ -6,6 +6,7 @@ import pygetwindow as gw
 import psutil as ps
 import subprocess as su
 from time import sleep
+import webbrowser as web
 
 app = Flask(__name__)
 
@@ -26,20 +27,8 @@ def home():
         else:
             return 'Failed'
 def navegador(link):
-    window = gw.getWindowsWithTitle('Google Chrome')
-    if not window:
-        os.startfile('C:\Program Files\Google\Chrome\Application\chrome.exe')
-        sleep(2)
-        window = gw.getWindowsWithTitle('Google Chrome')
-    try:
-        window[0].activate()
-    except:
-        window[0].minimize()
-        window[0].maximize()
-    with p.hold('ctrl'):
-        p.press('l')
-    p.typewrite(link)
-    p.press('enter')
+    google_path = 'C:/Program Files/Google/Chrome/Application/chrome.exe %s'
+    web.get(google_path).open(link)
 def shutdown(parametro): 
     os.system('shutdown '+parametro) 
 def cpu_info():
@@ -47,6 +36,12 @@ def cpu_info():
     cpu = ps.cpu_percent(interval=None)
     memory = ps.virtual_memory()[2]
     host = su.check_output('hostname', text=True)
-    return {'host':host, 'cpu':f'{cpu}','memory':f'{memory}'}
-
+    return {'host':host, 'cpu':str(cpu),'memory':str(memory)}
+@app.route('/file', methods=['POST'])
+def file():
+    file = request.files['file']
+    if not os.path.isdir('C:/users/caina/downloads/icaro'): 
+        os.mkdir('C:/users/caina/downloads/icaro')
+    file.save(f'C:/users/caina/downloads/icaro/{file.filename}')
+    return '200'
 app.run(host='0.0.0.0', port=5000, debug=True)

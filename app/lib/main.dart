@@ -1,11 +1,11 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:hello/values/custom_colors.dart';
-import 'package:hello/screens/navegador.dart';
-import 'package:hello/screens/multimidia.dart';
-import 'package:hello/screens/automacoes.dart';
-import 'package:hello/screens/env_file.dart';
+import 'package:Icaros/values/custom_colors.dart';
+import 'package:Icaros/screens/navegador.dart';
+import 'package:Icaros/screens/multimidia.dart';
+import 'package:Icaros/screens/automacoes.dart';
+import 'package:Icaros/screens/env_file.dart';
+import 'package:Icaros/search_ip.dart';
 import 'package:http/http.dart' as http;
 
 
@@ -15,8 +15,6 @@ void main() {
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
-
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -43,55 +41,12 @@ class MyHomePage extends StatefulWidget {
   final String title;
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  State<MyHomePage> createState() => _Myhomepage();
 }
-
-class _MyHomePageState extends State<MyHomePage>{
-Map<String,dynamic> _resposta = {'host':'', 'cpu':'','memory':''};
-Uri url = Uri.http('192.168.10.50:5000');
-
-  void navegator(){
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => Navegador())
-    );
-  }
-  void multimida(){
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => Multimidia())
-    );
-  }
-  void automacao(){
-    Navigator.push(
-      context, 
-      MaterialPageRoute(builder: (context)=>Automacoes())
-    );
-  }
-  void env_file(){
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context)=>Teste())
-    );
-  }
-  void search_ip() async{
-    
-    Map<String, dynamic> obj = {'pc_info':''};
-    try {final response = await http.post(url, body:jsonEncode(obj));
-    setState(() {
-      
-      var r = response.body;
-      _resposta = jsonDecode(r);
-    });}catch(e){
-      setState(() {
-        _resposta['host'] = 'Falha no servidor';
-      });
-    }
-  }
-  @override
-  Widget build(BuildContext context) {
-    search_ip();
-    return Scaffold(
+class _Myhomepage extends State<MyHomePage>{
+ @override 
+ Widget build(BuildContext context){
+   return Scaffold(
       appBar: AppBar(
         title: const Text('Inicio'),
         shape: const Border(
@@ -101,7 +56,101 @@ Uri url = Uri.http('192.168.10.50:5000');
           )
         ),
       ),
-      body: Column(
+      body: MyHomePageWidget());
+ }
+}
+class MyHomePageWidget extends StatefulWidget{
+  const MyHomePageWidget({super.key});
+
+  @override 
+  _MyHomePageWidget createState()=> _MyHomePageWidget();
+}
+class _MyHomePageWidget extends State<MyHomePageWidget>{
+  bool? page_focus;
+  Map<String,dynamic> _resposta = {'host':'', 'cpu':'','memory':''};
+  Uri url = Uri.http('192.168.10.50:5000');
+
+  void navegator(){
+    page_focus = false;
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => Navegador())
+    );
+  }
+  void multimida(){
+    page_focus = false;
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => Multimidia())
+    );
+  }
+  void automacao(){
+    page_focus = false;
+    Navigator.push(
+      context, 
+      MaterialPageRoute(builder: (context)=>Automacoes())
+    );
+  }
+  void env_file(){
+    page_focus = false;
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context)=>Env_file())
+    );
+  }
+  void info_pc() async{
+    if(page_focus!){Map<String, dynamic> obj = {'pc_info':''};
+    try {final response = await http.post(url, body:jsonEncode(obj));
+    setState(() {
+      var r = response.body;
+      _resposta = jsonDecode(r);
+    });}catch(e){
+      setState(() {
+        _resposta['host'] = 'Falha no servidor';
+      });
+    }}
+  }
+  Widget ip_search(){
+    return Center(
+      child: Container(
+        height: 50,
+        width: 100,
+        color: Colors.green,
+        child: TextButton(
+          onPressed: ()=>search.init_search(),
+          child: Text('ip'),
+        ),
+      ),
+    );
+  }
+  Widget pc_info(){
+    return Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                Text(
+                  _resposta['host'],
+                  style: const TextStyle(
+                    fontSize: 40
+                  ),
+                ),
+                Text(
+                  'Uso de cpu: ${_resposta['cpu']}',
+                  style: const TextStyle(fontSize: 20),
+                ),
+                Text(
+                  'Uso de memoria: ${_resposta['memory']}',
+                  style: const TextStyle(fontSize: 20),
+                ),
+              ]);
+  }
+  @override
+  void initState(){
+    page_focus = true;
+  }
+  @override
+  Widget build(BuildContext context) {  
+    info_pc();
+    return Column(
           children: [
             Expanded(child:FractionallySizedBox(
               heightFactor: .9,
@@ -117,25 +166,7 @@ Uri url = Uri.http('192.168.10.50:5000');
                   )],
                   borderRadius: BorderRadius.circular(10)
                 ),
-                child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                Text(
-                  _resposta['host'],
-                  style: const TextStyle(
-                    fontSize: 40
-                  ),
-                ),
-                Text(
-                  'Uso de cpu: '+_resposta['cpu'],
-                  style: TextStyle(fontSize: 20),
-                ),
-                Text(
-                  'Uso de memoria: '+_resposta['memory'],
-                  style: TextStyle(fontSize: 20),
-                ),
-                
-              ]),
+                child: pc_info()
               )
             )),
             GridView.count(
@@ -193,8 +224,6 @@ Uri url = Uri.http('192.168.10.50:5000');
                   ],
                 ),            
           ],
-        ),
-      )
-    ;
+        );
   }
 }
