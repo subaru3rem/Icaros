@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:Icaros/values/custom_colors.dart';
 import 'package:http/http.dart' as http;
+import 'package:flutter/services.dart';
 import 'dart:convert';
 
 class Automacoes extends StatefulWidget{
   _Automacoes createState() => _Automacoes();
 }
 class _Automacoes extends State<Automacoes>{
+  static const platform = MethodChannel('samples.flutter.dev/ip');
 
   @override
   Widget _energia = Center();
@@ -39,11 +41,31 @@ class _Automacoes extends State<Automacoes>{
           ),
         ),
         _energia,
-        
+        Container(
+        margin: const EdgeInsets.all(20),
+        width: 300.0,
+        height: 50.0,
+        decoration: BoxDecoration(border: Border.all(color: custom_colors.secundary_color)),
+        child: TextButton(
+          onPressed: ip,
+          child:const Text(
+                'ip',
+                style: TextStyle(fontSize: 25, color: Colors.white),
+              )
+          ),
+        ),
           ],
         ),
       )
     );
+  }
+  void ip() async {
+    try{
+      var result = await platform.invokeMethod('teste');
+      print(result);
+    }on PlatformException catch(e){
+      print(e.message);
+    }
   }
   void energia(){
     if (_energia_check){
