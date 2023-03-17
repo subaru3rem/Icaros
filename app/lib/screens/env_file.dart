@@ -37,8 +37,10 @@ class _Env_file_widgets extends State<Env_file_widgets>{
   bool transfe_check = false;
   void get_file() async {
     filepick = await FilePicker.platform.pickFiles();
-    file = File(filepick!.files.single.path.toString());
-    setState((){file_check = true;});
+    if(filepick != null){
+      file = File(filepick!.files.single.path.toString());
+      setState((){file_check = true;});
+    }
   }
   void api_post()async{
     setState(() {transfe_check=true;});
@@ -68,7 +70,7 @@ class _Env_file_widgets extends State<Env_file_widgets>{
           child:Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children:[
-            TextButton(onPressed: () {get_file();},
+            TextButton(onPressed: get_file,
             style: const ButtonStyle(
             backgroundColor: MaterialStatePropertyAll<Color>(custom_colors.primary_color)
             ),
@@ -81,7 +83,7 @@ class _Env_file_widgets extends State<Env_file_widgets>{
               textAlign: TextAlign.center,),
             
             FloatingActionButton(
-              onPressed: api_post, 
+              onPressed: ()=>{if(file_check){api_post()}else{get_file()}}, 
               child: const Icon(Icons.upload_file),
             )
           ]
