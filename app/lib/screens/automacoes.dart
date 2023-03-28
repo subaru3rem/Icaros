@@ -1,19 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:Icaros/values/custom_colors.dart';
+import 'package:Icaros/values/values.dart';
+import 'package:Icaros/main.dart';
 import 'package:http/http.dart' as http;
-import 'package:flutter/services.dart';
 import 'dart:convert';
 
 class Automacoes extends StatefulWidget{
   _Automacoes createState() => _Automacoes();
 }
 class _Automacoes extends State<Automacoes>{
-  static const platform = MethodChannel('samples.flutter.dev/ip');
-
   @override
-  Widget _energia = Center();
-  bool _energia_check = true;
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context){
     return Scaffold(
       appBar: AppBar(
         title: const Text('Automações'),
@@ -24,7 +20,20 @@ class _Automacoes extends State<Automacoes>{
           )
         ),
       ),
-      body: Center(
+      body: Automacoes_widgets()
+    );
+  }
+}
+class Automacoes_widgets extends StatefulWidget{
+  _Automacoes_widgets createState() => _Automacoes_widgets();
+}
+class _Automacoes_widgets extends State<Automacoes_widgets>{
+
+  @override
+  Widget _energia = Center();
+  bool _energia_check = true;
+  Widget build(BuildContext context) {
+    return Center(
         child: Column(
           children: [
             Container(
@@ -41,31 +50,9 @@ class _Automacoes extends State<Automacoes>{
           ),
         ),
         _energia,
-        Container(
-        margin: const EdgeInsets.all(20),
-        width: 300.0,
-        height: 50.0,
-        decoration: BoxDecoration(border: Border.all(color: custom_colors.secundary_color)),
-        child: TextButton(
-          onPressed: ip,
-          child:const Text(
-                'ip',
-                style: TextStyle(fontSize: 25, color: Colors.white),
-              )
-          ),
-        ),
           ],
         ),
-      )
     );
-  }
-  void ip() async {
-    try{
-      var result = await platform.invokeMethod('teste');
-      print(result);
-    }on PlatformException catch(e){
-      print(e.message);
-    }
   }
   void energia(){
     if (_energia_check){
@@ -120,7 +107,7 @@ class _Automacoes extends State<Automacoes>{
   }
   }
   void server(obj) async {
-      var url = Uri.http('192.168.10.50:5000');
+      var url = Uri.http(Ips.ip);
       final response = await http.post(url, body:jsonEncode(obj));
   }
 }

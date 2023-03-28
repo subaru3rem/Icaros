@@ -1,13 +1,12 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:Icaros/values/custom_colors.dart';
+import 'package:Icaros/values/values.dart';
 import 'package:Icaros/screens/navegador.dart';
 import 'package:Icaros/screens/multimidia.dart';
 import 'package:Icaros/screens/automacoes.dart';
 import 'package:Icaros/screens/env_file.dart';
-import 'package:Icaros/search_ip.dart';
 import 'package:http/http.dart' as http;
-
+import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 
 void main() {
   runApp(const MyApp());
@@ -67,11 +66,13 @@ class MyHomePageWidget extends StatefulWidget{
 }
 class _MyHomePageWidget extends State<MyHomePageWidget>{
   bool? page_focus;
-  Map<String,dynamic> _resposta = {'host':'', 'cpu':'','memory':''};
-  Uri url = Uri.http('192.168.10.50:5000');
+  Map<String,dynamic>? _resposta;
+  String? error_resposta;
+  Uri url = Uri.http(Ips.ip);
 
   void navegator(){
     page_focus = false;
+    var fds = Ips.ip;
     Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => Navegador())
@@ -106,43 +107,116 @@ class _MyHomePageWidget extends State<MyHomePageWidget>{
       _resposta = jsonDecode(r);
     });}catch(e){
       setState(() {
-        _resposta['host'] = 'Falha no servidor';
+        _resposta?['host'] = 'Falha no servidor';
       });
     }}
   }
-  Widget ip_search(){
-    return Center(
-      child: Container(
-        height: 50,
-        width: 100,
-        color: Colors.green,
-        child: TextButton(
-          onPressed: ()=>search.init_search(),
-          child: Text('ip'),
-        ),
-      ),
-    );
-  }
+
   Widget pc_info(){
-    return Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
+    List<Widget>? infoPc;
+    if (_resposta != null){
+    infoPc = [
                 Text(
-                  _resposta['host'],
+                  _resposta?['host'],
                   style: const TextStyle(
                     fontSize: 40
                   ),
                 ),
                 Text(
-                  'Uso de cpu: ${_resposta['cpu']}',
+                  'Uso de cpu: ${_resposta?['cpu']}',
                   style: const TextStyle(fontSize: 20),
                 ),
                 Text(
-                  'Uso de memoria: ${_resposta['memory']}',
+                  'Uso de memoria: ${_resposta?['memory']}',
                   style: const TextStyle(fontSize: 20),
                 ),
-              ]);
+              ];
+      }
+    else{
+      infoPc = [
+        const Text(
+          "Dispositivo não conectado",
+          style: TextStyle(
+                    fontSize: 20
+        )
+        ),
+        Container(
+          height:50,
+          width: 100,
+          margin: EdgeInsets.all(20),
+          child: TextButton(
+            onPressed: ip,
+            style: const ButtonStyle(
+                backgroundColor: MaterialStatePropertyAll<Color>( custom_colors.secundary_color)
+              ),
+            child: const Text(
+              "Conectar",
+              style: TextStyle(
+                color: Colors.white
+              ),
+              ),
+          )
+        )
+      ];
+    }
+    return Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: infoPc 
+              );
   }
+  void ip() async {
+    String code = await FlutterBarcodeScanner.scanBarcode(
+      "#FFFFFF",
+      "Cancel",
+      false,
+      ScanMode.QR
+    );
+    RegExp ip_regex = RegExp(r'^(\d?\d?\d)\.(\d?\d?\d)\.(\d?\d?\d)\.(\d?\d?\d)$');
+    if (ip_regex.hasMatch(code)){
+      Ips.ip = "$code:5000";
+    }
+    else{
+      Scaffold.of(context).showBottomSheet((BuildContext context){
+      return Stack(
+        children: [
+          Expanded(
+            child: TextButton(
+              onPressed: ()=>Navigator.pop(context),
+              child: Container(
+                color:const Color.fromRGBO(0, 0, 0, .5)
+              )
+            )
+          ),
+          Center(
+            child: Container(
+              width: 300,
+              height: 300,
+              color: custom_colors.primary_color,
+              child: Center(
+                child: Column(
+                  children: [
+                    const Text(
+                  "Erro ao ler o código",
+                  style: TextStyle(fontSize: 20),
+                ),
+                Container(
+                  width: 150,
+                  height: 50,
+                  child: TextButton(
+                    onPressed: (){},
+                    child: Text("Digitar ip")
+                  ),
+                )
+                  ],
+                  )
+              ),
+            )
+          )
+        ],
+      );
+      }
+    );
+  }}
   @override
   void initState(){
     page_focus = true;
