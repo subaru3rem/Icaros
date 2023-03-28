@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:Icaros/values/custom_colors.dart';
+import 'package:Icaros/values/values.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -361,7 +361,7 @@ class _Navegador_widgets extends State<Navegador_widgets>{
         ),
       );
     });
-      var url = Uri.http('192.168.10.50:5000');
+      var url = Uri.http(Ips.ip);
       Map<String, dynamic> obj = {'navegador': link};
       // ignore: unused_local_variable
       await http.post(url, body:jsonEncode(obj));

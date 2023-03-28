@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:Icaros/values/custom_colors.dart';
+import 'package:Icaros/values/values.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
@@ -31,7 +31,7 @@ class Multimidia_widgets extends StatefulWidget{
 class _Multimidia_widgets extends State<Multimidia_widgets>{
   bool _resume_control = false;
   void midia_command (command)async{
-    var url = Uri.http('192.168.10.50:5000');
+    var url = Uri.http(Ips.ip);
       Map<String, dynamic> x = {'multimidia':'true','tecla': command};
       final response = await http.post(url, body:jsonEncode(x));
   }
@@ -266,7 +266,7 @@ class _youtube_widgets extends State<youtube_widgets>{
         ),
       );
     });
-    var url = Uri.http('192.168.10.50:5000');
+    var url = Uri.http(Ips.ip);
     Map<String, dynamic> obj = {'navegador': 'https://www.youtube.com/watch?v=$id'};
     final response = await http.post(url, body:jsonEncode(obj));
     Navigator.pop(context);

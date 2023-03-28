@@ -2,7 +2,7 @@ import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:Icaros/values/custom_colors.dart';
+import 'package:Icaros/values/values.dart';
 
 
 class Env_file extends StatefulWidget{
@@ -44,7 +44,7 @@ class _Env_file_widgets extends State<Env_file_widgets>{
   }
   void api_post()async{
     setState(() {transfe_check=true;});
-    Uri postUri = Uri.http("192.168.10.50:5000", "/file");
+    Uri postUri = Uri.http(Ips.ip, "/file");
     http.MultipartRequest request = http.MultipartRequest("POST", postUri);
     http.MultipartFile multipartFile = await http.MultipartFile.fromPath('file', filepick!.files.single.path.toString());
     request.files.add(multipartFile);
