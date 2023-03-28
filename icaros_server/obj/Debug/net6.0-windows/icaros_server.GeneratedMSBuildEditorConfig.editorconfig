@@ -14,4 +14,4 @@ build_property.PlatformNeutralAssembly =
 build_property.EnforceExtendedAnalyzerRules = 
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = icaros_server
-build_property.ProjectDir = C:\Users\caina\Projetos\icaros\icaros_server\
+build_property.ProjectDir = c:\Users\caina\Projetos\icaros\icaros_server\
