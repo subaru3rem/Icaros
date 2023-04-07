@@ -1,5 +1,7 @@
 from flask import *
 import os
+import qrcode as qr
+import socket
 import pyautogui as p
 from time import sleep
 import pygetwindow as gw
@@ -9,6 +11,8 @@ from time import sleep
 import webbrowser as web
 
 app = Flask(__name__)
+port = 5000
+
 
 @app.route('/', methods=['POST'])
 def home():
@@ -44,4 +48,10 @@ def file():
         os.mkdir('C:/users/caina/downloads/icaro')
     file.save(f'C:/users/caina/downloads/icaro/{file.filename}')
     return '200'
-app.run(host='0.0.0.0', port=5000, debug=True)
+def CreateQr():
+    ip = socket.gethostbyname(socket.gethostname())
+    print(ip)
+    price_tag = qr.make(ip+":"+str(port))
+    price_tag.save("ip_code.png")
+CreateQr()
+app.run(host='0.0.0.0', port=port, debug=True)
