@@ -7,6 +7,7 @@ import 'package:Icaros/screens/automacoes.dart';
 import 'package:Icaros/screens/env_file.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
   runApp(const MyApp());
@@ -55,63 +56,64 @@ class _Myhomepage extends State<MyHomePage>{
           )
         ),
       ),
-      body: MyHomePageWidget());
+      body: const MyHomePageWidget());
  }
 }
 class MyHomePageWidget extends StatefulWidget{
   const MyHomePageWidget({super.key});
 
   @override 
+  // ignore: library_private_types_in_public_api
   _MyHomePageWidget createState()=> _MyHomePageWidget();
 }
 class _MyHomePageWidget extends State<MyHomePageWidget>{
-  bool? page_focus;
+  bool? pagefocus;
   Map<String,dynamic>? _resposta;
-  String? error_resposta;
-  Uri url = Uri.http(Ips.ip);
+  String? errorResposta;
+  bool checked = false;
 
   void navegator(){
-    page_focus = false;
-    var fds = Ips.ip;
+    pagefocus = false;
     Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => Navegador())
     );
   }
   void multimida(){
-    page_focus = false;
+    pagefocus = false;
     Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => Multimidia())
     );
   }
   void automacao(){
-    page_focus = false;
+    pagefocus = false;
     Navigator.push(
       context, 
       MaterialPageRoute(builder: (context)=>Automacoes())
     );
   }
   void env_file(){
-    page_focus = false;
+    pagefocus = false;
     Navigator.push(
       context,
       MaterialPageRoute(builder: (context)=>Env_file())
     );
   }
   void info_pc() async{
-    if(page_focus!){Map<String, dynamic> obj = {'pc_info':''};
+    if (Ips.ip != ""){
+    Uri url = Uri.http(Ips.ip);
+    Map<String, dynamic> obj = {'pc_info':''};
     try {final response = await http.post(url, body:jsonEncode(obj));
     setState(() {
       var r = response.body;
       _resposta = jsonDecode(r);
     });}catch(e){
-      setState(() {
-        _resposta?['host'] = 'Falha no servidor';
-      });
+     // setState(() {
+     //   _resposta = {"host":'Falha no servidor'};
+     // });
     }}
   }
-
   Widget pc_info(){
     List<Widget>? infoPc;
     if (_resposta != null){
@@ -164,6 +166,10 @@ class _MyHomePageWidget extends State<MyHomePageWidget>{
                 children: infoPc 
               );
   }
+  void saveip(ip)async{
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString("ip",ip);
+  }
   void ip() async {
     String code = await FlutterBarcodeScanner.scanBarcode(
       "#FFFFFF",
@@ -171,9 +177,82 @@ class _MyHomePageWidget extends State<MyHomePageWidget>{
       false,
       ScanMode.QR
     );
-    RegExp ip_regex = RegExp(r'^(\d?\d?\d)\.(\d?\d?\d)\.(\d?\d?\d)\.(\d?\d?\d)$');
-    if (ip_regex.hasMatch(code)){
-      Ips.ip = "$code:5000";
+    RegExp ipRegex = RegExp(r'^(\d?\d?\d)\.(\d?\d?\d)\.(\d?\d?\d)\.(\d?\d?\d)');
+    if (ipRegex.hasMatch(code)){
+      Scaffold.of(context).showBottomSheet((BuildContext context){
+      return Stack(
+        children: [
+          TextButton(
+              onPressed: ()=>Navigator.pop(context),
+              child: Container(
+                color:const Color.fromRGBO(0, 0, 0, .5)
+              )
+          ),
+          Center(
+            child: Container(
+              width: 300,
+              height: 300,
+              padding: const EdgeInsets.all(20),
+              color: custom_colors.primary_color,
+              child: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    const Text(
+                  "Confirmar IP:",
+                  style: TextStyle(fontSize: 20),
+                ),
+                Text(
+                  code,
+                  style: const TextStyle(fontSize: 30),
+                ),
+                Flex(
+                  direction: Axis.horizontal,
+                  children: [
+                  teste(),
+                  const Text("Manter conectado")           
+                ]),
+                Flex(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  direction: Axis.horizontal,
+                  children: [
+                    SizedBox(
+                  width: 100,
+                  height: 50,
+                  child: TextButton(
+                    style: const ButtonStyle(backgroundColor: MaterialStatePropertyAll<Color>(custom_colors.secundary_color)),
+                    onPressed: (){
+                      setState(() {
+                      Ips.ip = code;  
+                      });
+                      if (_teste.checked == true){
+                        saveip(code);
+                      }
+                      _MyHomePageWidget().info_pc();
+                      Navigator.pop(context);
+                    },
+                    child: const Text("Confirma", style:TextStyle(color: Colors.white), textAlign: TextAlign.center,)
+                  ),
+                ),
+                SizedBox(
+                  width: 100,
+                  height: 50,
+                  child: TextButton(
+                    style: const ButtonStyle(backgroundColor: MaterialStatePropertyAll<Color>(custom_colors.secundary_color)),
+                    onPressed: ip,
+                    child: const Text("Escanear novamente", style:TextStyle(color: Colors.white), textAlign: TextAlign.center,)
+                  ),
+                )
+                  ],
+                )
+                  ],
+                  )
+              ),
+            )
+          )
+        ],
+      );
+      });
     }
     else{
       Scaffold.of(context).showBottomSheet((BuildContext context){
@@ -216,20 +295,34 @@ class _MyHomePageWidget extends State<MyHomePageWidget>{
       );
       }
     );
-  }}
+  }
+  }
+  void verificarIP()async{
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    var ip = prefs.getString("ip");
+    if (ip != null){
+      setState(() {
+        Ips.ip = ip;
+      });
+    }
+  }
   @override
   void initState(){
-    page_focus = true;
+     verificarIP();
   }
   @override
   Widget build(BuildContext context) {  
     info_pc();
     return Column(
           children: [
-            Expanded(child:FractionallySizedBox(
+            Expanded(
+              child:Stack(
+                alignment: AlignmentDirectional.center,
+                children: [FractionallySizedBox(
               heightFactor: .9,
               widthFactor: .9,
-              child: Container(
+              child: 
+                  Container(
                 margin: const EdgeInsets.all(15),
                 decoration: BoxDecoration(
                   color: custom_colors.primary_color,
@@ -241,8 +334,11 @@ class _MyHomePageWidget extends State<MyHomePageWidget>{
                   borderRadius: BorderRadius.circular(10)
                 ),
                 child: pc_info()
+              )),
+              Container(child:TextButton(onPressed: ip, child: const Center()))
+              ],
               )
-            )),
+            ),
             GridView.count(
                   shrinkWrap: true,
                   padding: const EdgeInsets.all(20),
@@ -299,5 +395,31 @@ class _MyHomePageWidget extends State<MyHomePageWidget>{
                 ),            
           ],
         );
+  }
+}
+class teste extends StatefulWidget{
+  @override
+  _teste createState() => _teste();
+}
+class _teste extends State<teste>{
+  static bool checked = false;
+
+  @override
+  Widget build(BuildContext context){
+    return Checkbox(
+      checkColor: Colors.white,
+      fillColor: MaterialStateProperty.resolveWith<Color>((Set<MaterialState> states) {
+        if (states.contains(MaterialState.disabled)) {
+          return Colors.white;
+        }
+        return Colors.black;
+      }),
+      value: checked,
+      onChanged: (bool? value) {
+        setState(() {
+          checked = value!;
+        });
+      },
+    );
   }
 }
