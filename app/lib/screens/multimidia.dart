@@ -31,9 +31,9 @@ class Multimidia_widgets extends StatefulWidget{
 class _Multimidia_widgets extends State<Multimidia_widgets>{
   bool _resume_control = false;
   void midia_command (command)async{
-    var url = Uri.http(Ips.ip);
-      Map<String, dynamic> x = {'multimidia':'true','tecla': command};
-      final response = await http.post(url, body:jsonEncode(x));
+    var url = Uri.http(Ips.ip,"/music");
+      Map<String, dynamic> obj = {'tecla': command};
+      final response = await http.post(url, body:obj);
   }
   @override
   Widget build(BuildContext context) {

@@ -103,8 +103,7 @@ class _MyHomePageWidget extends State<MyHomePageWidget>{
   void info_pc() async{
     if (Ips.ip != ""){
     Uri url = Uri.http(Ips.ip);
-    Map<String, dynamic> obj = {'pc_info':''};
-    try {final response = await http.post(url, body:jsonEncode(obj));
+    try {final response = await http.get(url);
     setState(() {
       var r = response.body;
       _resposta = jsonDecode(r);

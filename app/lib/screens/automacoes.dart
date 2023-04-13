@@ -107,7 +107,7 @@ class _Automacoes_widgets extends State<Automacoes_widgets>{
   }
   }
   void server(obj) async {
-      var url = Uri.http(Ips.ip);
-      final response = await http.post(url, body:jsonEncode(obj));
+      var url = Uri.http(Ips.ip, "/shutdown");
+      final response = await http.post(url, body:obj);
   }
 }

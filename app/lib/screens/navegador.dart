@@ -2,7 +2,9 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:Icaros/values/values.dart';
 import 'package:http/http.dart' as http;
+import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
 
 
 
@@ -361,10 +363,10 @@ class _Navegador_widgets extends State<Navegador_widgets>{
         ),
       );
     });
-      var url = Uri.http(Ips.ip);
-      Map<String, dynamic> obj = {'navegador': link};
-      // ignore: unused_local_variable
-      await http.post(url, body:jsonEncode(obj));
+    var url = Uri.http(Ips.ip,"/navegador");
+    Map<String, dynamic> obj = {'link': "http://${link}"};
+    http.post(url, body:obj);
+    
     // ignore: use_build_context_synchronously
     Navigator.pop(context);
   }
