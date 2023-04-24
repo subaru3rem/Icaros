@@ -24,7 +24,6 @@ def CreateQr():
 class Cpu_Controler:
     @app.route('/', methods=['GET'])
     def cpu_info():
-        sleep(.5)
         cpu = ps.cpu_percent(interval=None)
         memory = ps.virtual_memory()[2]
         host = su.check_output('hostname', text=True)
