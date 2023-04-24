@@ -1,2 +1,29 @@
-# Icaros
-  Projeto de aplicação com funções que conectam e controlam o computador atravez do seu dispositivo movel, a ideia do projeto é ter rotinas e atalhos para facilitação e aumento de velocidade ao ultilizar o computaodr tanto para tarefas rotineiras como jogos e trabalho quanto para controle de multimidia pausando e dando play em uma musica q esteja tocando
+
+![Logo](icaros_banner.png)
+
+
+# Icaros App
+
+Uma solução que possibilita que você de comando e realize ações em seu desktop atravéz do seu smartphone.
+
+
+## Funcionalidades
+
+- Receber niveis de uso da memoria e da cpu do desktop
+- Digitar link no celular e abrir no navegador
+- Controle de midia pelo celular (play, pause, next music, volume up, etc)
+- Desligar, reiniciar ou hibernar o computador pelo celular
+- Enviar arquivos do celular para o computador
+
+
+## Instalação
+
+Instale pelos links:
+- [Desktop](/server)
+Basta baixar o executavel e permitir acesso a sua rede, ele ira gerar um png com o qr code para conexão com o celular.
+- [Mobile](/app/build/app/outputs/flutter-apk)
+Instale o apk de acordo com seu modelo de processador e após a instalação, leia o qr code gerado pelo servidor para conectar ambos.
+## Autores
+
+- [@subaru3rem](https://www.github.com/subaru3rem)
+
