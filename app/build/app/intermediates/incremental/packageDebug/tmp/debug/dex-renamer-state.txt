@@ -1,0 +1,4 @@
+#Mon Apr 17 19:27:45 BRT 2023
+base.0=C\:\\Users\\caina\\Projetos\\icaros\\app\\build\\app\\intermediates\\dex\\debug\\mergeDexDebug\\classes.dex
+renamed.0=classes.dex
+path.0=classes.dex

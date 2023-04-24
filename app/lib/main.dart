@@ -67,34 +67,29 @@ class MyHomePageWidget extends StatefulWidget{
   _MyHomePageWidget createState()=> _MyHomePageWidget();
 }
 class _MyHomePageWidget extends State<MyHomePageWidget>{
-  bool? pagefocus;
   Map<String,dynamic>? _resposta;
   String? errorResposta;
   bool checked = false;
 
   void navegator(){
-    pagefocus = false;
     Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => Navegador())
     );
   }
   void multimida(){
-    pagefocus = false;
     Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => Multimidia())
     );
   }
   void automacao(){
-    pagefocus = false;
     Navigator.push(
       context, 
       MaterialPageRoute(builder: (context)=>Automacoes())
     );
   }
   void env_file(){
-    pagefocus = false;
     Navigator.push(
       context,
       MaterialPageRoute(builder: (context)=>Env_file())
@@ -102,16 +97,16 @@ class _MyHomePageWidget extends State<MyHomePageWidget>{
   }
   void info_pc() async{
     if (Ips.ip != ""){
-    Uri url = Uri.http(Ips.ip);
-    try {final response = await http.get(url);
-    setState(() {
-      var r = response.body;
-      _resposta = jsonDecode(r);
-    });}catch(e){
-     // setState(() {
-     //   _resposta = {"host":'Falha no servidor'};
-     // });
-    }}
+      await Future.delayed(const Duration(milliseconds: 500));
+      Uri url = Uri.http(Ips.ip);
+      try {final response = await http.get(url);
+      setState(() {
+        var r = response.body;
+        _resposta = jsonDecode(r);
+      });}catch(e){
+        print(e);
+      }
+    }
   }
   Widget pc_info(){
     List<Widget>? infoPc;
@@ -144,7 +139,7 @@ class _MyHomePageWidget extends State<MyHomePageWidget>{
         Container(
           height:50,
           width: 100,
-          margin: EdgeInsets.all(20),
+          margin: const EdgeInsets.all(20),
           child: TextButton(
             onPressed: ip,
             style: const ButtonStyle(

@@ -266,9 +266,9 @@ class _youtube_widgets extends State<youtube_widgets>{
         ),
       );
     });
-    var url = Uri.http(Ips.ip);
-    Map<String, dynamic> obj = {'navegador': 'https://www.youtube.com/watch?v=$id'};
-    final response = await http.post(url, body:jsonEncode(obj));
+    var url = Uri.http(Ips.ip, "/navegador");
+    Map<String, dynamic> obj = {'link': 'https://music.youtube.com/watch?v=$id'};
+    final response = await http.post(url, body:obj);
     Navigator.pop(context);
   }
 }
