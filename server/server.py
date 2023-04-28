@@ -9,14 +9,12 @@ import psutil as ps
 import subprocess as su
 from time import sleep
 import webbrowser as web
-import asyncio as asy
 
 app = Flask(__name__)
 port = 5000
 
 def CreateQr():
     ip = socket.gethostbyname(socket.gethostname())
-    print(ip)
     price_tag = qr.make(ip+":"+str(port))
     price_tag.save("ip_code.png")
 
@@ -32,8 +30,6 @@ class Cpu_Controler:
     def shutdown():
         parametro =  request.form.get("shutdown")
         timer = request.form.get("timer")
-        print(parametro)
-        print(timer)
         if timer != None:
             pass
         else:
