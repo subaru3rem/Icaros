@@ -203,7 +203,7 @@ class _MyHomePageWidget extends State<MyHomePageWidget>{
                 Flex(
                   direction: Axis.horizontal,
                   children: [
-                  teste(),
+                  CheckboxWidget(),
                   const Text("Manter conectado")           
                 ]),
                 Flex(
@@ -391,11 +391,11 @@ class _MyHomePageWidget extends State<MyHomePageWidget>{
         );
   }
 }
-class teste extends StatefulWidget{
+class CheckboxWidget extends StatefulWidget{
   @override
   _teste createState() => _teste();
 }
-class _teste extends State<teste>{
+class _CheckboxWidget extends State<CheckboxWidget>{
   static bool checked = false;
 
   @override
