@@ -74,34 +74,8 @@ class _MyHomePageWidget extends State<MyHomePageWidget>{
   Map<String,dynamic>? _resposta;
   String? errorResposta;
   bool checked = false;
-
-  void navegator(){
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => Navegador())
-    );
-  }
-  void multimida(){
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => Multimidia())
-    );
-  }
-  void automacao(){
-    Navigator.push(
-      context, 
-      MaterialPageRoute(builder: (context)=>Automacoes())
-    );
-  }
-  void env_file(){
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context)=>Env_file())
-    );
-  }
   void info_pc() async{
-    if (Ips.ip != ""){
-      await Future.delayed(const Duration(milliseconds: 500));
+    if (Ips.ip != "" && Window.window == "home"){
       Uri url = Uri.http(Ips.ip);
       try {final response = await http.get(url);
       setState(() {
@@ -337,60 +311,6 @@ class _MyHomePageWidget extends State<MyHomePageWidget>{
               ],
               )
             ),
-            GridView.count(
-                  shrinkWrap: true,
-                  padding: const EdgeInsets.all(20),
-                  crossAxisSpacing: 20,
-                  mainAxisSpacing: 20,
-                  crossAxisCount: 2,
-                  children: [
-                    TextButton(
-              onPressed: navegator,
-              style: const ButtonStyle(
-                backgroundColor: MaterialStatePropertyAll<Color>( custom_colors.secundary_color)
-              ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: const [ Icon(Icons.language, color: Colors.white,),
-                 Text('Navegador', style: TextStyle(color: Colors.white),)]
-              ),
-            )
-            ,
-            TextButton(
-              onPressed: multimida,
-              style: const ButtonStyle(
-                backgroundColor: MaterialStatePropertyAll<Color>( custom_colors.secundary_color)
-              ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: const [ Icon(Icons.headphones, color: Colors.white,),
-                 Text('Multimidia', style: TextStyle(color: Colors.white),)]
-              ),
-            ),
-            TextButton(
-              onPressed: automacao,
-              style: const ButtonStyle(
-                backgroundColor: MaterialStatePropertyAll<Color>( custom_colors.secundary_color)
-              ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: const [ Icon(Icons.devices, color: Colors.white,),
-                 Text('Automações', style: TextStyle(color: Colors.white),)]
-              ),
-            ),
-            TextButton(
-              onPressed: env_file,
-              style: const ButtonStyle(
-                backgroundColor: MaterialStatePropertyAll<Color>( custom_colors.secundary_color)
-              ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: const [ Icon(Icons.file_upload, color: Colors.white,),
-                 Text('Arquivos', style: TextStyle(color: Colors.white),)]
-              ),
-            )
-                  ],
-                ),            
           ],
         );
   }
