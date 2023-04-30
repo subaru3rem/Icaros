@@ -1,13 +1,15 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
+
 import 'package:Icaros/values/values.dart';
+import 'package:Icaros/botomappbarwidgets.dart';
 import 'package:Icaros/screens/navegador.dart';
 import 'package:Icaros/screens/multimidia.dart';
 import 'package:Icaros/screens/automacoes.dart';
 import 'package:Icaros/screens/env_file.dart';
-import 'package:http/http.dart' as http;
-import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
   runApp(const MyApp());
