@@ -1,6 +1,6 @@
 server/ip_code.png
 .idea
 app/.dart_tool
-app/.build
+app/build
 app/.flutter-plugins
 app/.flutter-plugins-dependencies
