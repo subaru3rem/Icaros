@@ -1,7 +1,8 @@
-import 'package:flutter/material.dart';
-import 'package:Icaros/values/values.dart';
-import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'package:Icaros/values/values.dart';
+import 'package:Icaros/botomappbarwidgets.dart';
 
 class Multimidia extends StatefulWidget{
   @override 
@@ -20,7 +21,8 @@ class _Multimidia extends State<Multimidia>{
           )
         ),
       ),
-     body: Multimidia_widgets()
+      body: Multimidia_widgets(),
+      bottomNavigationBar: const BottomAppBarWidgets(),
      );
   }
 }
@@ -161,7 +163,9 @@ class _youtube extends State<youtube>{
           )
         ),
       ),
-      body: youtube_widgets());
+      body: youtube_widgets(),
+      bottomNavigationBar: const BottomAppBarWidgets(),
+      );
   }
 }
 class youtube_widgets extends StatefulWidget{

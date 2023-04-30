@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:Icaros/values/values.dart';
-import 'package:Icaros/main.dart';
 import 'package:http/http.dart' as http;
-import 'dart:convert';
+import 'package:Icaros/values/values.dart';
+import 'package:Icaros/botomappbarwidgets.dart';
 
 class Automacoes extends StatefulWidget{
   _Automacoes createState() => _Automacoes();
@@ -20,7 +19,8 @@ class _Automacoes extends State<Automacoes>{
           )
         ),
       ),
-      body: Automacoes_widgets()
+      body: Automacoes_widgets(),
+      bottomNavigationBar: const BottomAppBarWidgets(),
     );
   }
 }

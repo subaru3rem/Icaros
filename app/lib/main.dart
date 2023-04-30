@@ -58,7 +58,9 @@ class _Myhomepage extends State<MyHomePage>{
           )
         ),
       ),
-      body: const MyHomePageWidget());
+      body: const MyHomePageWidget(),
+      bottomNavigationBar: const BottomAppBarWidgets(),
+      );
  }
 }
 class MyHomePageWidget extends StatefulWidget{
@@ -221,7 +223,7 @@ class _MyHomePageWidget extends State<MyHomePageWidget>{
                       setState(() {
                       Ips.ip = code;  
                       });
-                      if (_teste.checked == true){
+                      if (_CheckboxWidget.checked == true){
                         saveip(code);
                       }
                       _MyHomePageWidget().info_pc();
@@ -395,7 +397,7 @@ class _MyHomePageWidget extends State<MyHomePageWidget>{
 }
 class CheckboxWidget extends StatefulWidget{
   @override
-  _teste createState() => _teste();
+  _CheckboxWidget createState() => _CheckboxWidget();
 }
 class _CheckboxWidget extends State<CheckboxWidget>{
   static bool checked = false;

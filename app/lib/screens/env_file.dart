@@ -1,8 +1,9 @@
 import 'dart:io';
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:Icaros/values/values.dart';
+import 'package:file_picker/file_picker.dart';
+import 'package:Icaros/botomappbarwidgets.dart';
 
 
 class Env_file extends StatefulWidget{
@@ -22,7 +23,8 @@ class _Env_file extends State<Env_file> {
           )
         ),
       ),
-      body: Env_file_widgets()
+      body: Env_file_widgets(),
+      bottomNavigationBar: const BottomAppBarWidgets(),
     );
   }
 }

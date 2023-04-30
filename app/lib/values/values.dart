@@ -7,3 +7,6 @@ class custom_colors{
 class Ips{
   static String ip = '';
 }
+class Window{
+  static String window = 'home';
+}

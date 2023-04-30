@@ -1,13 +1,9 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:Icaros/values/values.dart';
 import 'package:http/http.dart' as http;
-import 'package:dio/dio.dart';
+import 'package:Icaros/values/values.dart';
+import 'package:Icaros/botomappbarwidgets.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-
-
-
 
 class Navegador extends StatefulWidget {
   @override
@@ -27,6 +23,7 @@ class _Navegador extends State<Navegador>{
         ),
       ),
       body: Navegador_widgets(),
+      bottomNavigationBar: const BottomAppBarWidgets(),
       );
   }
 } 
@@ -85,35 +82,26 @@ class _Navegador_widgets extends State<Navegador_widgets>{
               ),
             )
             ),
-            Container(
-              margin: const EdgeInsets.only(top:20,bottom: 20),
-              child:FloatingActionButton(
-              heroTag: 'btn_search',
-              onPressed: ()=>serve(_link),
-              child: const Icon(Icons.search),
-            )),
-            const Expanded(child: Center()),
-            Column(
-      mainAxisAlignment: MainAxisAlignment.end,
-      children: <Widget>[Container(
-        margin: const EdgeInsets.all(20),
-        width: 300.0,
-        height: 50.0,
-        child: TextButton(
-          onPressed: fav,
-          style: const ButtonStyle(
-            backgroundColor: MaterialStatePropertyAll<Color>(custom_colors.secundary_color),
-          ),
-          child:Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: const <Widget>[
-              Text('Favoritos', style: TextStyle(color:Colors.white, fontSize: 20),),
-              Icon(Icons.star, color:Colors.white),
-            ]
-          ),
-        ),
-      ),]
-    ),
+            Row(
+              children: [
+                Container(
+                  margin: const EdgeInsets.only(top:20,bottom: 20),
+                  child:FloatingActionButton(
+                    heroTag: 'btn_search',
+                    onPressed: ()=>serve(_link),
+                    child: const Icon(Icons.search),
+                  )
+                ),
+                Container(
+                  margin: const EdgeInsets.only(top:20,bottom: 20),
+                  child:FloatingActionButton(
+                    heroTag: 'bnt_fav',
+                    onPressed: fav,
+                    child: const Icon(Icons.star),
+                  )
+                ),
+              ],
+            )
     ]
     );}
   void fav(){
