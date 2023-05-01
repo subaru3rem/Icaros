@@ -37,7 +37,6 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
   final String title;
@@ -81,62 +80,89 @@ class _MyHomePageWidget extends State<MyHomePageWidget>{
       setState(() {
         var r = response.body;
         _resposta = jsonDecode(r);
-      });}catch(e){
-        print(e);
-      }
+      });}catch(e){}
     }
   }
-  Widget pc_info(){
-    List<Widget>? infoPc;
+  Widget desktopInfoWidget(){
+    Widget infoPc;
     if (_resposta != null){
-    infoPc = [
-                Text(
-                  _resposta?['host'],
-                  style: const TextStyle(
-                    fontSize: 40
+
+
+      infoPc = Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Stack(
+            alignment: AlignmentDirectional.center,
+            children: [
+              Column(
+                children: [
+                  Container(
+            margin:const EdgeInsets.all(20),
+            child:const Icon(
+              Icons.desktop_mac_outlined, 
+              color: Colors.white,
+              size: 100,
+            )
+          ),
+          Text(
+            _resposta?['host'],
+            style: const TextStyle(
+              fontSize: 40
+            ),
+          ),
+                ],
+              ),
+              Container(
+                child:TextButton(
+                  onPressed: ip, 
+                  child: const Center()
+                )
+              )
+            ],
+          ),
+          Container(
+              width: 300,
+              height: 300,
+              margin: const EdgeInsets.all(15),
+              decoration: BoxDecoration(
+                color: custom_colors.primary_color,
+                boxShadow: const [ BoxShadow(
+                  color: custom_colors.secundary_color,
+                  spreadRadius: 1,
+                  blurRadius: 20
+                )],
+                borderRadius: BorderRadius.circular(10)
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                mainAxisSize: MainAxisSize.max,
+                children: [
+                  Text(
+                    'Uso de cpu: ${_resposta?['cpu']}%',
+                    style: const TextStyle(fontSize: 20),
                   ),
-                ),
-                Text(
-                  'Uso de cpu: ${_resposta?['cpu']}',
-                  style: const TextStyle(fontSize: 20),
-                ),
-                Text(
-                  'Uso de memoria: ${_resposta?['memory']}',
-                  style: const TextStyle(fontSize: 20),
-                ),
-              ];
+                  Text(
+                    'Uso de memoria: ${_resposta?['memory']}%',
+                    style: const TextStyle(fontSize: 20),
+                  ),
+                  Text(
+                    'Uso do disco: ${_resposta?['disco']}%',
+                    style: const TextStyle(fontSize: 20),
+                  ),
+                  Text(
+                    'Bateria: ${_resposta?['bateria']}%',
+                    style: const TextStyle(fontSize: 20),
+                  ),
+                ],
+              ),
+            )
+        ],
+      );
       }
-    else{
-      infoPc = [
-        const Text(
-          "Dispositivo não conectado",
-          style: TextStyle(
-                    fontSize: 20
-        )
-        ),
-        Container(
-          height:50,
-          width: 100,
-          margin: const EdgeInsets.all(20),
-          child: TextButton(
-            onPressed: ip,
-            style: const ButtonStyle(
-                backgroundColor: MaterialStatePropertyAll<Color>( custom_colors.secundary_color)
-              ),
-            child: const Text(
-              "Conectar",
-              style: TextStyle(
-                color: Colors.white
-              ),
-              ),
-          )
-        )
-      ];
-    }
-    return Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: infoPc 
-              );
+      else{
+        infoPc = const Center();
+      }
+    return infoPc;
   }
   void saveip(ip)async{
     final SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -288,28 +314,7 @@ class _MyHomePageWidget extends State<MyHomePageWidget>{
     return Column(
           children: [
             Expanded(
-              child:Stack(
-                alignment: AlignmentDirectional.center,
-                children: [FractionallySizedBox(
-              heightFactor: .9,
-              widthFactor: .9,
-              child: 
-                  Container(
-                margin: const EdgeInsets.all(15),
-                decoration: BoxDecoration(
-                  color: custom_colors.primary_color,
-                  boxShadow: const [BoxShadow(
-                    color: custom_colors.secundary_color,
-                    spreadRadius: 1,
-                    blurRadius: 20,
-                  )],
-                  borderRadius: BorderRadius.circular(10)
-                ),
-                child: pc_info()
-              )),
-              Container(child:TextButton(onPressed: ip, child: const Center()))
-              ],
-              )
+              child:desktopInfoWidget()
             ),
           ],
         );

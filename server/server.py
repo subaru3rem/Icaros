@@ -22,10 +22,12 @@ def CreateQr():
 class Cpu_Controler:
     @app.route('/', methods=['GET'])
     def cpu_info():
+        host = su.check_output('hostname', text=True)
         cpu = ps.cpu_percent(interval=None)
         memory = ps.virtual_memory()[2]
-        host = su.check_output('hostname', text=True)
-        return {'host':host, 'cpu':str(cpu),'memory':str(memory)}
+        disco = ps.disk_usage('/')[3]
+        bateria = ps.sensors_battery()[0]
+        return {'host':host, 'cpu':str(cpu),'memory':str(memory), 'disco':str(disco), 'bateria':str(bateria)}
     @app.route('/shutdown', methods=["POST"])
     def shutdown():
         parametro =  request.form.get("shutdown")
