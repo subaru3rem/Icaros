@@ -32,8 +32,8 @@ class Navegador_widgets extends StatefulWidget{
   _Navegador_widgets createState() => _Navegador_widgets();
 }
 class _Navegador_widgets extends State<Navegador_widgets>{
-  var _link = '';
-  var _resposta = '';
+  String _link = '';
+  String _resposta = '';
   List<Widget> _fav = [Center()];
   Map<String, String> _fav_temp = Map<String, String>();
   bool _request_state = true;
@@ -67,6 +67,7 @@ class _Navegador_widgets extends State<Navegador_widgets>{
             Container(
             margin: const EdgeInsets.only(top: 10, left: 30, right: 30, bottom: 20),
             child: TextField(
+              onSubmitted: (text)=>serve(_link),
               onChanged: (text){_link = text;},
               style: const TextStyle(color: Colors.white),
               decoration:  const InputDecoration(
@@ -83,6 +84,7 @@ class _Navegador_widgets extends State<Navegador_widgets>{
             )
             ),
             Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 Container(
                   margin: const EdgeInsets.only(top:20,bottom: 20),
@@ -110,11 +112,11 @@ class _Navegador_widgets extends State<Navegador_widgets>{
       (BuildContext context){
         return Column(
           children:[
-            const Expanded(child: Center()),
+            Expanded(child: TextButton(onPressed: ()=>Navigator.pop(context), child: const Center())),
             Container(
               height: 400,
               decoration: const BoxDecoration(color: custom_colors.primary_color, borderRadius: BorderRadius.only(topLeft: Radius.circular(20),topRight: Radius.circular(20))),
-              child:Expanded(child:Column(
+              child:Column(
                 children: [
                   Container(
                     height: 80,
@@ -146,7 +148,6 @@ class _Navegador_widgets extends State<Navegador_widgets>{
                     ),
                   )
                 ],
-              )
               )
               )
           ]
@@ -353,7 +354,7 @@ class _Navegador_widgets extends State<Navegador_widgets>{
     });
     var url = Uri.http(Ips.ip,"/navegador");
     Map<String, dynamic> obj = {'link': "http://${link}"};
-    http.post(url, body:obj);
+    await http.post(url, body:obj);
     
     // ignore: use_build_context_synchronously
     Navigator.pop(context);
