@@ -27,9 +27,21 @@ class MyApp extends StatelessWidget {
           secondary: custom_colors.secundary_color
         ),
         scaffoldBackgroundColor:  custom_colors.primary_color,
-        textTheme: Theme.of(context).textTheme.apply(
-          bodyColor: Colors.white,
-          displayColor: Colors.white,
+        textTheme: const TextTheme(
+          bodyMedium: TextStyle(
+            color:Colors.white
+          ),
+          bodyLarge: TextStyle(
+            color:Colors.white
+          ),
+          bodySmall: TextStyle(
+            color:Colors.white
+          ),
+        ),
+        textButtonTheme: TextButtonThemeData(
+          style: ButtonStyle(
+            foregroundColor: MaterialStateProperty.all(Colors.white),
+          )
         ),
         bottomSheetTheme: const BottomSheetThemeData(backgroundColor: Colors.black54),
         ),
