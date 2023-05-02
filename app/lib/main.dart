@@ -98,8 +98,6 @@ class _MyHomePageWidget extends State<MyHomePageWidget>{
   Widget desktopInfoWidget(){
     Widget infoPc;
     if (_resposta != null){
-
-
       infoPc = Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -172,7 +170,34 @@ class _MyHomePageWidget extends State<MyHomePageWidget>{
       );
       }
       else{
-        infoPc = const Center();
+        infoPc = Center(child:Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children:[
+          Container(
+            margin:const EdgeInsets.all(20),
+            child:const Icon(
+              Icons.desktop_mac_outlined, 
+              color: Colors.white,
+              size: 100,
+            )
+          ),
+          const Text(
+            "Host não disponivel",
+            style: TextStyle(
+              fontSize: 40
+            ),
+          ),
+          Container(
+            margin: const EdgeInsets.all(20),
+            height: 50,
+            width:100,
+            decoration: BoxDecoration(borderRadius: BorderRadius.circular(10),color:custom_colors.secundary_color),
+            child: TextButton(
+              onPressed: ip,
+              child: const Text("Conectar Novamente",textAlign: TextAlign.center,)
+            )
+          )
+        ]));
       }
     return infoPc;
   }
