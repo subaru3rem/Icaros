@@ -1,14 +1,15 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:Icaros/values/values.dart';
-import 'package:Icaros/botomappbarwidgets.dart';
+import 'package:icaros/values/values.dart';
+import 'package:icaros/botomappbarwidgets.dart';
 
-class Multimidia extends StatefulWidget{
+class MultimidiaState extends StatefulWidget{
+  const MultimidiaState({super.key});
   @override 
-  _Multimidia createState() => _Multimidia();
+  Multimidia createState() => Multimidia();
 }
-class _Multimidia extends State<Multimidia>{
+class Multimidia extends State<MultimidiaState>{
   @override 
   Widget build(BuildContext context){
     return Scaffold(
@@ -16,49 +17,52 @@ class _Multimidia extends State<Multimidia>{
         title: const Text("Multmidia"),
         shape:  const Border(
           bottom: BorderSide(
-            color:custom_colors.secundary_color,
+            color:CustomColors.secundary_color,
             width: 2
           )
         ),
       ),
-      body: Multimidia_widgets(),
+      body: const  MultimidiaWidgetsState(),
       bottomNavigationBar: const BottomAppBarWidgets(),
      );
   }
 }
-class Multimidia_widgets extends StatefulWidget{
+class MultimidiaWidgetsState extends StatefulWidget{
+  const MultimidiaWidgetsState({super.key});
   @override
-  _Multimidia_widgets createState()=> _Multimidia_widgets();
+  MultimidiaWidgets createState()=> MultimidiaWidgets();
 }
-class _Multimidia_widgets extends State<Multimidia_widgets>{
+class MultimidiaWidgets extends State<MultimidiaWidgetsState>{
+  // ignore: non_constant_identifier_names
   bool _resume_control = false;
+  // ignore: non_constant_identifier_names
   void midia_command (command)async{
     var url = Uri.http(Ips.ip,"/music");
       Map<String, dynamic> obj = {'tecla': command};
-      final response = await http.post(url, body:obj);
+      await http.post(url, body:obj);
   }
   @override
   Widget build(BuildContext context) {
     return Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Expanded(
-            child:Container(
-              width: double.infinity,
+          Container(
+              width: 300,
+              height: 200,
               padding: const EdgeInsets.all(3),
-              margin: const EdgeInsets.only(left: 20, right: 20, top: 60, bottom: 50),
+              margin: const EdgeInsets.only(left: 20, right: 20, top: 60, bottom: 60),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(20),
-                color: custom_colors.primary_color,
+                color: CustomColors.primary_color,
                 boxShadow: const [BoxShadow(
-                    color: custom_colors.secundary_color,
+                    color: CustomColors.secundary_color,
                     spreadRadius: 1,
                     blurRadius: 20,
                   )],
               ),
               child: TextButton(
                 onPressed: (){
-                  Navigator.push(context, MaterialPageRoute(builder:(context) => youtube()));
+                  Navigator.push(context, MaterialPageRoute(builder:(context) => const YouTubeState()));
                 },
                 child: const Text(
                   'Youtube',
@@ -68,11 +72,11 @@ class _Multimidia_widgets extends State<Multimidia_widgets>{
                   ),),
               ),
             ),
-          ),
           Row(
+            mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           Container(
-            margin: const EdgeInsets.all(20),
+            margin: const EdgeInsets.all(10),
             height: 80,
             width: 80,
             child:FloatingActionButton(
@@ -81,7 +85,7 @@ class _Multimidia_widgets extends State<Multimidia_widgets>{
             child: const Icon(Icons.skip_previous)
           )),
           Container(
-            margin: const EdgeInsets.all(20),
+            margin: const EdgeInsets.all(10),
             height: 80,
             width: 80,
             child:FloatingActionButton(
@@ -100,7 +104,7 @@ class _Multimidia_widgets extends State<Multimidia_widgets>{
             :const Icon(Icons.play_arrow)
           )),
           Container(
-            margin: const EdgeInsets.all(20),
+            margin: const EdgeInsets.all(10),
             height: 80,
             width: 80,
             child:FloatingActionButton(
@@ -111,10 +115,10 @@ class _Multimidia_widgets extends State<Multimidia_widgets>{
         ],
       ),
       Row(
-        
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Container(
-            margin: const EdgeInsets.all(20),
+            margin: const EdgeInsets.all(10),
             height: 80,
             width: 80,
             child:FloatingActionButton(
@@ -123,7 +127,7 @@ class _Multimidia_widgets extends State<Multimidia_widgets>{
             child: const Icon(Icons.volume_down),
           )),
           Container(
-            margin: const EdgeInsets.all(20),
+            margin: const EdgeInsets.all(10),
             height: 80,
             width: 80,
             child:FloatingActionButton(
@@ -132,7 +136,7 @@ class _Multimidia_widgets extends State<Multimidia_widgets>{
             child: const Icon(Icons.volume_off),
           )),
           Container(
-            margin: const EdgeInsets.all(20),
+            margin: const EdgeInsets.all(10),
             height: 80,
             width: 80,
             child:FloatingActionButton(
@@ -146,11 +150,12 @@ class _Multimidia_widgets extends State<Multimidia_widgets>{
       );
   }
 }
-class youtube extends StatefulWidget{
+class YouTubeState extends StatefulWidget{
+  const YouTubeState({super.key});
   @override 
-  _youtube createState() => _youtube();
+  YouTube createState() => YouTube();
 }
-class _youtube extends State<youtube>{
+class YouTube extends State<YouTubeState>{
   @override
   Widget build(BuildContext context){
     return Scaffold(
@@ -158,24 +163,25 @@ class _youtube extends State<youtube>{
         title: const Text("Youtube"),
         shape:  const Border(
           bottom: BorderSide(
-            color:custom_colors.secundary_color,
+            color:CustomColors.secundary_color,
             width: 2
           )
         ),
       ),
-      body: youtube_widgets(),
+      body: const YoutubeWidgetsState(),
       bottomNavigationBar: const BottomAppBarWidgets(),
       );
   }
 }
-class youtube_widgets extends StatefulWidget{
+class YoutubeWidgetsState extends StatefulWidget{
+  const YoutubeWidgetsState({super.key});
   @override
-  _youtube_widgets createState() => _youtube_widgets();
+  YoutubeWidgets createState() => YoutubeWidgets();
 }
-class _youtube_widgets extends State<youtube_widgets>{
+class YoutubeWidgets extends State<YoutubeWidgetsState>{
   List<Map<String, dynamic>> items = [];
   String pesquisa = '';
-  List<Widget> videos = [Center()];
+  List<Widget> videosWidgets = <Widget>[const Center()];
   bool _loading = false;
   @override
   Widget build(BuildContext context){
@@ -192,25 +198,25 @@ class _youtube_widgets extends State<youtube_widgets>{
             child:TextField(
             onChanged: (text){pesquisa = text;},
             decoration: InputDecoration(
-              suffixIcon: IconButton(onPressed:()=>search(pesquisa), icon: const Icon(Icons.done), color: custom_colors.secundary_color),
+              suffixIcon: IconButton(onPressed:()=>search(pesquisa), icon: const Icon(Icons.done), color: CustomColors.secundary_color),
               focusedBorder: const OutlineInputBorder(
-              borderSide: BorderSide(color:custom_colors.secundary_color, width: 0.0)
+              borderSide: BorderSide(color:CustomColors.secundary_color, width: 0.0)
               ),
               enabledBorder:  const OutlineInputBorder(
-                borderSide: BorderSide(color: custom_colors.secundary_color, width: 0.0)
+                borderSide: BorderSide(color: CustomColors.secundary_color, width: 0.0)
               ),
               labelText: 'Search:',
-              labelStyle: const TextStyle(color: custom_colors.secundary_color,),
+              labelStyle: const TextStyle(color: CustomColors.secundary_color,),
               ),
           )),
           Expanded(
             child:ListView(
               children: !_loading
-              ?videos
+              ?videosWidgets
               :[Container(
                 height: 100,
                 padding: const EdgeInsets.symmetric(horizontal: 130),
-                child:const CircularProgressIndicator(color: custom_colors.secundary_color,)
+                child:const CircularProgressIndicator(color: CustomColors.secundary_color,)
                 )],
             )
           )
@@ -226,20 +232,20 @@ class _youtube_widgets extends State<youtube_widgets>{
      if (response.statusCode == 200) {
     Map<String, dynamic> data = jsonDecode(response.body);
     List<dynamic> items = data['items'];
-    add_videos(items);
+    addVideos(items);
     }
   }
-  void add_videos(items){
-    List<Widget> _videos = [];
+  void addVideos(items){
+    List<Widget> videos = [];
     for(var video in items){
     var id = video['id']['videoId'];
     var info = video['snippet'];
-    _videos.add(
-      Container(
+    videos.add(
+      SizedBox(
         height: 100,
         child:TextButton(
-          style: const ButtonStyle(backgroundColor: MaterialStatePropertyAll(custom_colors.primary_color)),
-          onPressed: ()=>open_video(id),
+          style: const ButtonStyle(backgroundColor: MaterialStatePropertyAll(CustomColors.primary_color)),
+          onPressed: ()=>openVideo(id),
           child:Row(
           children:[
             Image.network(info['thumbnails']['default']['url']),
@@ -252,27 +258,28 @@ class _youtube_widgets extends State<youtube_widgets>{
         )
       )
     );
-    };
+    }
     setState((){
-      videos = _videos;
+      videosWidgets = videos;
       _loading = false;
     });
   }
-  void open_video(id) async{
+  void openVideo(id) async{
     Scaffold.of(context).showBottomSheet((BuildContext context){
       return const Center(
         child: SizedBox(
           height: 100,
           width: 100,
           child: CircularProgressIndicator(
-            color: custom_colors.secundary_color,
+            color: CustomColors.secundary_color,
           )
         ),
       );
     });
     var url = Uri.http(Ips.ip, "/navegador");
     Map<String, dynamic> obj = {'link': 'https://music.youtube.com/watch?v=$id'};
-    final response = await http.post(url, body:obj);
+    await http.post(url, body:obj);
+    // ignore: use_build_context_synchronously
     Navigator.pop(context);
   }
 }

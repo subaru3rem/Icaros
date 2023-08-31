@@ -1,16 +1,17 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:Icaros/values/values.dart';
 import 'package:file_picker/file_picker.dart';
-import 'package:Icaros/botomappbarwidgets.dart';
+import 'package:icaros/values/values.dart';
+import 'package:icaros/botomappbarwidgets.dart';
 
 
-class Env_file extends StatefulWidget{
+class EnvFileState extends StatefulWidget{
+  const EnvFileState({super.key});
   @override 
-  _Env_file createState()=> _Env_file();
+  EnvFile createState()=> EnvFile();
 }
-class _Env_file extends State<Env_file> {
+class EnvFile extends State<EnvFileState> {
   @override
   Widget build(BuildContext context) {
      return Scaffold(
@@ -18,39 +19,42 @@ class _Env_file extends State<Env_file> {
         title: const Text("Transferir Arquivos"),
         shape: const Border(
           bottom: BorderSide(
-            color:custom_colors.secundary_color,
+            color:CustomColors.secundary_color,
             width: 2
           )
         ),
       ),
-      body: Env_file_widgets(),
+      body: const EnvFileWidgetsState(),
       bottomNavigationBar: const BottomAppBarWidgets(),
     );
   }
 }
-class Env_file_widgets extends StatefulWidget{
+class EnvFileWidgetsState extends StatefulWidget{
+  const EnvFileWidgetsState({super.key});
   @override
-  _Env_file_widgets createState()=> _Env_file_widgets();
+  EnvFileWidgets createState()=> EnvFileWidgets();
 }
-class _Env_file_widgets extends State<Env_file_widgets>{
+class EnvFileWidgets extends State<EnvFileWidgetsState>{
   FilePickerResult? filepick;
   File? file;
+  // ignore: non_constant_identifier_names
   bool file_check = false;
+  // ignore: non_constant_identifier_names
   bool transfe_check = false;
-  void get_file() async {
+  void getFile() async {
     filepick = await FilePicker.platform.pickFiles();
     if(filepick != null){
       file = File(filepick!.files.single.path.toString());
       setState((){file_check = true;});
     }
   }
-  void api_post()async{
+  void apiPost()async{
     setState(() {transfe_check=true;});
     Uri postUri = Uri.http(Ips.ip, "/file");
     http.MultipartRequest request = http.MultipartRequest("POST", postUri);
     http.MultipartFile multipartFile = await http.MultipartFile.fromPath('file', filepick!.files.single.path.toString());
     request.files.add(multipartFile);
-    http.StreamedResponse response = await request.send();
+    await request.send();
     setState(() {transfe_check=false;});
   }
   @override
@@ -62,7 +66,7 @@ class _Env_file_widgets extends State<Env_file_widgets>{
           width: 300,
           margin: const EdgeInsets.only(bottom:40, top: 100),
           decoration: BoxDecoration(
-            color: custom_colors.primary_color,
+            color: CustomColors.primary_color,
             borderRadius: BorderRadius.circular(20),
             boxShadow: const [BoxShadow(
               color: Colors.grey,
@@ -72,9 +76,9 @@ class _Env_file_widgets extends State<Env_file_widgets>{
           child:Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children:[
-            TextButton(onPressed: get_file,
+            TextButton(onPressed: getFile,
             style: const ButtonStyle(
-            backgroundColor: MaterialStatePropertyAll<Color>(custom_colors.primary_color)
+            backgroundColor: MaterialStatePropertyAll<Color>(CustomColors.primary_color)
             ),
             child:  const Icon(Icons.folder, color: Colors.white,size: 100,)
             ),
@@ -85,7 +89,7 @@ class _Env_file_widgets extends State<Env_file_widgets>{
               textAlign: TextAlign.center,),
             
             FloatingActionButton(
-              onPressed: ()=>{if(file_check){api_post()}else{get_file()}}, 
+              onPressed: ()=>{if(file_check){apiPost()}else{getFile()}}, 
               child: const Icon(Icons.upload_file),
             )
           ]
