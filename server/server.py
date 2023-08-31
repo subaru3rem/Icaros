@@ -117,7 +117,7 @@ class Leitor:
         #verifica o methodo da requisição
         if request.method == "GET":
             #seleciona o id, nome e o caminho da imagem das novels
-            cursor.execute("select id, nome, imgPath from novels")
+            cursor.execute("select * from novels")
             all_novels = cursor.fetchall()
             #transforma a tupla retornada em um dicionario
             column_names = [i[0] for i in cursor.description]
@@ -145,8 +145,8 @@ class Leitor:
             #insere a novel no banco de dados
             data["imgFile"] = imgFile.replace(os.sep, '/')
             cursor.execute(
-                """insert into novels (nome, link, ImgPath)
-                values(%(nome)s, %(link)s, %(imgFile)s""",
+                """insert into novels (nome, link, ImgPath, traduzido)
+                values(%(nome)s, %(link)s, %(imgFile)s, %(traduzido)s""",
                 data
             )
             mydb.commit()
@@ -169,7 +169,8 @@ class Leitor:
                 """update novels 
                 set nome=%(nome)s,
                 link=%(link)s , 
-                imgPath=%(imgFile)s 
+                imgPath=%(imgFile)s,
+                traduzido = %(traduzido)s 
                 where id = %(id)s""",
                 data
             )
@@ -379,10 +380,13 @@ class NovelController:
                 self.getContent()
     def translateContent(self):
         cursor.execute(
-            """select id, conteudoCap
-            from capsnovel
-            where traduzido = 0 
-            and conteudoCap is not null;"""
+            """select c.id, c.conteudoCap
+            from capsnovel c
+            inner join novels n
+            on c.idNovel = n.id
+            where c.traduzido = false 
+            and c.conteudoCap is not null 
+            and n.traduzido = false;"""
         )
         text = cursor.fetchall()
         for t in text:
