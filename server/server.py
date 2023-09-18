@@ -5,7 +5,7 @@ from selenium import webdriver
 from threading import Thread
 from flask import *
 import mysql.connector as sql
-import base64 as enconder
+import base64 as encoder
 import webbrowser as web
 import subprocess as su
 import pyautogui as p
@@ -117,18 +117,20 @@ class Leitor:
         #verifica o methodo da requisição
         if request.method == "GET":
             #seleciona o id, nome e o caminho da imagem das novels
-            cursor.execute("select * from novels")
+            cursor.execute("select * from novels;")
             all_novels = cursor.fetchall()
             #transforma a tupla retornada em um dicionario
             column_names = [i[0] for i in cursor.description]
             dict_novels = [dict(zip(column_names, row)) for row in all_novels]
             #roda todas as novels e codifica a novel antes de retornar uma resposta
-            for i in dict_novels: i["img"] = enconder.b64encode(open(i["imgPath"],"rb").read()).decode('utf-8') if i["imgPath"] else ""
+            for i in dict_novels:
+                i["img"] = encoder.b64encode(open(i["imgPath"],"rb").read()).decode('utf-8') if i["imgPath"] else ""
+                i["traduzido"] = bool(i["traduzido"])
             return dict_novels
         elif request.method == "POST":
             #pega os dados da requisição
             data = request.form.to_dict()
-            img = request.files.get("ImgNovel")
+            img = data["imgNovel"]
             #salva a imagem caso tenha alguma
             if img:
                 #pega o caminho do servidor
@@ -136,9 +138,10 @@ class Leitor:
                 #adiciona a pasta da imagem no caminho do servidor
                 imgPath = os.path.join(path, 'images_novels')
                 #adiciona o arquivo ao caminho
-                imgFile = os.path.join(imgPath, img.filename.replace(" ", "_"))
+                imgFile = os.path.join(imgPath, data["imgName"].replace(" ", "_"))
                 #salva no caminho construido acima
-                img.save(imgFile)
+                with open(imgFile, "wb") as fh:
+                    fh.write(encoder.decodebytes(bytes(img, 'utf-8')))
             else:
                 #caso n tenha imagem, salva uma string vazia
                 imgFile = ""
@@ -154,24 +157,26 @@ class Leitor:
         elif request.method == "PUT":
             #pega os dados da requisição
             data = request.form.to_dict()
-            img = request.files.get("ImgNovel")
+            img = data["imgNovel"]
             #salva novamente a imagem caso venha algo(metodo igual ao anterior)
             if img:
                 path = os.getcwd()
                 imgPath = os.path.join(path, 'images_novels')
-                imgFile = os.path.join(imgPath, img.filename.replace(" ", "_"))
-                img.save(imgFile)
+                imgFile = os.path.join(imgPath, data["imgName"].replace(" ", "_"))
+                with open(imgFile, "wb") as fh:
+                    fh.write(encoder.decodebytes(bytes(img, 'utf-8')))
             else:
                 imgFile = ""
             #altera os registros no banco
             data["imgFile"] = imgFile.replace(os.sep, '/')
+            data["traduzido"] = bool(data["traduzido"])
             cursor.execute(
                 """update novels 
                 set nome=%(nome)s,
                 link=%(link)s , 
-                imgPath=%(imgFile)s,
+                imgPath= if(%(imgFile)s = "", imgPath, %(imgFile)s),
                 traduzido = %(traduzido)s 
-                where id = %(id)s""",
+                where id = %(id)s;""",
                 data
             )
             mydb.commit()
@@ -220,18 +225,18 @@ class Leitor:
                 dict_caps.append({
                     "id":i[0],
                     "name": i[1],
-                    "lido":True if i[2] else False
+                    "lido":bool(i[2])
                 })
             #retorna o dicionario
             return dict_caps
         elif tipo == 0:
             #pega o id do link do cap
-            id_cap = request.form.get("id")
+            id_cap = request.form.get("ids")
             #alterna o estado de leitura de um capitulo unico
             cursor.execute(
                 """update capsnovel
                 set checkLido = not checkLido 
-                where id = %s""",
+                where id in %s""",
                 [id_cap]
             )
             mydb.commit()
